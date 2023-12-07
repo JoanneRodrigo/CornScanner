@@ -1,0 +1,7 @@
+{
+  "name": "CornFrontend",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
