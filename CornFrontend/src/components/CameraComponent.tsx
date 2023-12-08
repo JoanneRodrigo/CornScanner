@@ -1,6 +1,6 @@
 // CameraComponent.tsx
 import React, { useRef } from "react";
-import { IonButton } from "@ionic/react";
+import { IonButton, IonImg } from "@ionic/react";
 import Webcam from "react-webcam";
 
 const CameraComponent: React.FC = () => {
@@ -14,28 +14,23 @@ const CameraComponent: React.FC = () => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
-      }}
-    >
+    <div style={{ position: "relative", height: "100vh" }}>
       <Webcam
         audio={false}
         ref={webcamRef}
         screenshotFormat="image/jpeg"
-        style={{
-          width: "80%",
-          height: "auto",
-          borderRadius: "8px",
-          marginBottom: "10px",
-        }}
+        style={{ width: "100%", height: "auto" }}
       />
-      <IonButton onClick={takePhoto} size="small">
-        Scan
+      <IonButton
+        onClick={takePhoto}
+        style={{
+          position: "absolute",
+          bottom: "70px",
+          left: "50%",
+          transform: "translateX(-50%)",
+        }}
+      >
+        Take Photo
       </IonButton>
     </div>
   );

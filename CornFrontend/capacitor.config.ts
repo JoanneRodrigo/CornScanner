@@ -1,12 +1,14 @@
-import { CapacitorConfig } from '@capacitor/cli';
+import { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'CornFrontend',
-  webDir: 'dist',
+  appId: "com.example.app",
+  appName: "CornFrontend",
+  webDir: "build",
   server: {
-    androidScheme: 'https'
-  }
+    androidScheme: "http", // Use 'http' during development
+    iosScheme: "https",
+    cleartext: true, // Allow HTTP on Android (for development)
+  },
 };
 
 export default config;
