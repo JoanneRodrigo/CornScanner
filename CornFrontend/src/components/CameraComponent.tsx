@@ -1,37 +1,65 @@
-// CameraComponent.tsx
-import React, { useRef } from "react";
-import { IonButton, IonImg } from "@ionic/react";
+import React, { useRef, useEffect, useState } from "react";
+import { IonButton } from "@ionic/react";
 import Webcam from "react-webcam";
+import axios from "axios";
 
 const CameraComponent: React.FC = () => {
   const webcamRef = useRef<Webcam>(null);
+  const [diseaseDetected, setDiseaseDetected] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
 
-  const takePhoto = () => {
-    // Use the webcamRef to access webcam methods if needed
-    const imageSrc = webcamRef.current?.getScreenshot();
-    // Handle the captured image
-    console.log(imageSrc);
+  const takePhoto = async () => {
+    if (webcamRef.current) {
+      const imageSrc = webcamRef.current.getScreenshot();
+      processImage(imageSrc);
+    }
+  };
+
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append("image", file);
+
+      try {
+        const response = await axios.post(
+          "http://localhost:8100/upload",
+          formData
+        );
+        setUploadedImage(response.data.data);
+        processImage(response.data.data);
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      }
+    }
+  };
+
+  const processImage = async (imageSrc: string) => {
+    // Perform any image processing logic here
+    // For example, you can use TensorFlow to analyze the image.
+    // ...
+
+    // For demonstration purposes, let's simulate disease detection.
+    const diseaseFound = Math.random() > 0.5;
+    setDiseaseDetected(diseaseFound);
   };
 
   return (
-    <div style={{ position: "relative", height: "100vh" }}>
+    <div>
       <Webcam
         audio={false}
         ref={webcamRef}
         screenshotFormat="image/jpeg"
-        style={{ width: "100%", height: "auto" }}
+        width={640}
+        height={480}
       />
-      <IonButton
-        onClick={takePhoto}
-        style={{
-          position: "absolute",
-          bottom: "70px",
-          left: "50%",
-          transform: "translateX(-50%)",
-        }}
-      >
-        Take Photo
-      </IonButton>
+      <input type="file" accept="image/*" onChange={handleImageUpload} />
+      <IonButton onClick={takePhoto}>Take Photo</IonButton>
+
+      {diseaseDetected && <p>Disease Detected!</p>}
+      {uploadedImage && <img src={uploadedImage} alt="Uploaded" />}
     </div>
   );
 };
